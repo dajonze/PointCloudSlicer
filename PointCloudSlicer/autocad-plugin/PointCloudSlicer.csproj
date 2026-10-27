@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyName>PointCloudSlicer</AssemblyName>
+    <RootNamespace>PointCloudSlicer</RootNamespace>
+    <Nullable>enable</Nullable>
+    <LangVersion>9.0</LangVersion>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <!-- AutoCAD loads the DLL — do not generate an exe -->
+    <OutputType>Library</OutputType>
+    <!-- 
+      Set this to your AutoCAD installation path.
+      Common locations:
+        C:\Program Files\Autodesk\AutoCAD 2025
+        C:\Program Files\Autodesk\AutoCAD 2024
+        C:\Program Files\Autodesk\AutoCAD 2023
+    -->
+    <AutoCadDir Condition="'$(AutoCadDir)'==''">C:\Program Files\Autodesk\AutoCAD 2025</AutoCadDir>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <!--
+    AutoCAD .NET assemblies are referenced as private=false so they are NOT
+    copied to the output folder — AutoCAD already has them loaded at runtime.
+  -->
+  <ItemGroup>
+    <Reference Include="acmgd">
+      <HintPath>$(AutoCadDir)\acmgd.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="accoremgd">
+      <HintPath>$(AutoCadDir)\accoremgd.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="acdbmgd">
+      <HintPath>$(AutoCadDir)\acdbmgd.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- Point cloud engine API (AutoCAD 2020+) -->
+    <Reference Include="AcPointCloudEngineApi" Condition="Exists('$(AutoCadDir)\AcPointCloudEngineApi.dll')">
+      <HintPath>$(AutoCadDir)\AcPointCloudEngineApi.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>
